@@ -470,7 +470,7 @@ Begin your message with a short summary of your changes (up to 50 characters as 
 
 The "git commit" command wraps up your changes:
 \begin{lstlisting}[language=bash]
-$ git commit -m "changed driving and pathing code to allow robot to drive off table"
+$ git commit -m "Got the robot to drive off a table consistently"
 \end{lstlisting}
 
 If you have a longer commit message, possibly with multiple paragraphs, you can leave out the "-m" parameter and Git will open an editor application for you (which you can also configure via the "core.editor" property).
@@ -582,6 +582,8 @@ This shows in detail how each file in the commit was modified or changed. %poten
 
 \subsection{Time to Celebrate}
 Congratulations this is the fundamentals of working with git and version control many projects can and have been build on this foundation. However git can do much more than this. So take a break maybe grab a beverage and lets continue on!
+\newline \newline
+I suggest to further cementing your knowledge try doing all the actions work on a small programming project. A fun one is to try writing an auto solver for the \href{https://www.24game.com/t-about-howtoplay.aspx}{24 Game}. Remember to keep all the things you have learned in mind about committing often and frequently with good commit messages!
 
 \section{Branching can Change Your Life}
 It sounds insane .... But the truth is: it's not an exaggeration. Using branches in your day-to-day work might very well prove to make you a better programmer or designer.
@@ -616,6 +618,7 @@ Things will start to get very confusing when you try to handle multiple topics i
     \includegraphics[width=4.5in]{images/one-context.jpg}
 \end{figure}
 
+
 A tempting workaround might be to simply copy your complete project folder for each new context. But this only leaves you with other problems:
 \begin{itemize}
     \item You circumvent your VCS, since those new folders won't be under version control.
@@ -629,7 +632,179 @@ To make a long story short: if your goal is to maintain a level of santity, you'
 
 You might have already guessed it: branches are what we need to solve these problems. Because a branch represents exactly such a context in a project and helps you keep it separate from all other contexts.
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=4.5in]{images/multiple-contexts.jpg}
+\end{figure}
 
+All the changes you make at any time will only apply to the currently active branch; all other branches are left untouched. This gives you the freedom to both work on different things in parallel and, above all, to experiment - because you can't mess up! In case things go wrong you can always go back / undo / start fresh / switch contexts...
+\newline\newline
+Luckily, branches in Git are cheap \& easy. There's no reason not to create a new branch when you start working on a new topic, no matter how big or small it might be.
+
+\begin{golden-rule}
+Use Branches Extensively:
+\newline\newline
+Branching is one of Git’s most powerful features – and this is not by accident: quick and easy branching was a central requirement from day one. Branches are the perfect tool to help you avoid mixing up different lines of development. You should use branches extensively in your development workflows: for new features, bug fixes, experiments, ideas…
+\end{golden-rule}
+
+\section{Working with branches}
+Until now, we haven't taken much notice of branches in our example project. However, without knowing, we were already working on a branch! This is because branches aren't optional in Git: you are always working on a certain branch (the currently active, or "checked out", or "HEAD" branch).
+\newline\newline
+So, which branch is HEAD at the moment? The "git status" command tells us in its first line of output: "On branch master".
+The "master" branch was created by Git automatically for us when we started the project. Although you could rename or delete it, you'll have a hard time finding a project without it because most people just keep it. But please keep in mind that "master" is by no means a special or magical branch. It's like any other branch!
+\newline\newline
+Now, let's start working on a new feature. Based on the project's current state, we create a new branch and name it "pid-test":
+\begin{lstlisting}
+$ git branch pid-test
+\end{lstlisting}
+Using the "git branch" command lists all of our branches (and the "-v" flag provides us with a little more data than usual):
+\begin{lstlisting}
+$ git branch -v
+  pid-test     3de33cc Got the robot to drive off a table consistently
+* master       3de33cc [ahead 1] Got the robot to drive off a table consistently
+\end{lstlisting}
+You can see that our new branch "pid-testm" was created and is based on the same version as "master". Additionally, the little asterisk character (*) next to "master" indicates that this is our current HEAD branch. To emphasize this: the "git branch" command only created that new branch - but it didn't make it active. Before checking out that new branch, it's a good idea to have another look at "git status" to see where we currently are:
+\begin{lstlisting}
+$ git status
+# On branch master
+# Changes not staged for commit:
+#   (use "git add <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working 
+#    directory)
+#
+#       modified:   dobackflip.py
+#
+no changes added to commit (use "git add" and/or "git commit -a")
+\end{lstlisting}
+
+Oh, right: we still have some changes in "imprint.html" in our working copy! Actually, we just wanted to start working on our new "contact-form" branch; but these changes don't belong to this feature. So what do we do with them? One way to get this work-in-progress out of the way would be to simply commit it. But committing half-done work is a bad habit.
+
+\begin{golden-rule}Never Commit Half-Done Work
+\newline\newline
+You should only commit code when it’s completed. This doesn’t mean you have to complete a whole, large feature before committing. Quite the contrary: split the feature’s implementation into logical chunks and remember to commit early and often. But don’t commit just to get half-done work out of your way when you need a "clean working copy". For these cases, consider using Git’s “Stash” feature instead.
+\end{golden-rule}
+
+\section{Saving Changes Temporarily}
+A commit wraps up changes and saves them permanently in the repository. However, in your day-to-day work, there are a lot of situations where you only want to save your local changes temporarily. For example, imagine you're in the middle of some changes for feature X when an important bug report comes in. Your local changes don't belong to the bugfix you're going to make. You have to get rid of them (temporarily, without losing them!) and continue working on them later.
+\newline\newline
+Situations like this one happen all the time: you have some local changes in your working copy that you can't commit right now - and you want or need to start working on something else. To get these changes out of your way and have a "clean" working copy, Git's "Stash" feature comes in handy
+
+\begin{concept}
+The Stash
+\newline\newline 
+Think of the Stash as a clipboard on steroids: it takes all the changes in your working copy and saves them for you on a new clipboard. You're left with a clean working copy, i.e. you have no more local changes.
+\newline\newline 
+Later, at any time, you can restore the changes from that clipboard in your working copy - and continue working where you left off.
+\newline\newline 
+You can create as many Stashes as you want - you're not limited to storing only one set of changes. Also, a Stash is not bound to the branch where you created it: when you restore it, the changes will be applied to your current HEAD branch, whichever this may be.
+\end{concept}
+
+Let's stash away these local changes so we have a clean working copy before starting to work on our new feature:
+
+\begin{lstlisting}
+$ git stash
+Saved working directory and index state WIP on master: 
+   2dfe283 Got the robot to drive off a table consistently
+HEAD is now at 2dfe283 Got the robot to drive off a table consistently
+\end{lstlisting}
+\begin{lstlisting}
+$ git status
+# On branch master
+nothing to commit (working directory clean)
+\end{lstlisting}
+The local changes in "dobackflip.py" are now safely stored on a clipboard, ready to be restored any time we want to continue working on them.
+\newline\newline
+You can easily get an overview of your current Stashes:
+\begin{lstlisting}
+$ git stash list
+stash@{0}: WIP on master: 2d6e283 Implement the new login box
+\end{lstlisting}
+
+The newest Stash will always be at the top of the list, named "stash@{0}". Older Stashes have higher numbers.
+\newline\newline
+When you're ready to restore a saved Stash, you have two options:
+\begin{itemize}
+    \item Calling "git stash pop" will apply the newest Stash and clear it from your Stash clipboard.
+    \item Calling "git stash apply <stashname>" will also apply the specified Stash, but it will remain saved. You can delete it later via "git stash drop <stashname>".
+\end{itemize}
+
+You can choose to not specify the Stash when using any of these commands. Then, Git will simply take the newest Stash (always "stash@{0}").
+
+\begin{concept}
+When to Stash
+\newline\newline
+Stashing helps you get a clean working copy. While this can be helpful in many situations, it's strongly recommended...
+\newline\newline
+...before checking out a different branch.
+\newline
+...before pulling remote changes.
+\newline
+...before merging or rebasing a branch.
+\end{concept}
+
+\section{Checking Out a Local Branch}
+Now that we have a clean working copy, the first thing we have to do is switch to (or "check out") our newly created branch:
+\begin{lstlisting}
+$ git checkout pid-test
+\end{lstlisting}
+
+\begin{concept}
+Checkout, HEAD, and Your Working Copy
+\newline\newline
+A branch automatically points to the latest commit in that context. And since a commit references a certain version of your project, Git always knows exactly which files belong to that branch.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=4.5in]{}
+\end{figure}
+At each point in time, only one branch can be HEAD / checked out / active. The files in your working copy are those that are associated with this exact branch. All other branches (and their associated files) are safely stored in Git's database.
+\newline\newline
+To make another branch (say, "pid-test") active, the "git checkout" command is used. This does two things for you:
+\begin{itemize}
+    \item It makes "pid-test" the current HEAD branch.
+    \item It replaces the files in your working directory to match exactly the revision that "pid-test" is at.
+\end{itemize}
+\end{concept}
+Running "git status" once more, you'll see that we're now "On branch pid-test". From now on, all of our changes and commits will only impact this very context - until we switch it again by using the "checkout" command to make a different branch active.
+\newline\newline
+Let's prove this by creating a new file called "jumpboy.py" and committing it:
+\begin{lstlisting}
+$ git add jumpboy.py
+$ git commit -m "Robot can now jump"
+$ git log
+commit 56eddd14cf034f4bcb8dc9cbf847b33309fa5180
+Author: Arjun Gandhi <beepboop@arjungandhi.com>
+Date: Fri Jul 26 10:56:16 2013 +0200
+
+    Robot can now jump
+
+commit 2dfe283e6c81ca48d6edc1574b1f2d4d84ae7f1
+Author: Arjun Gandhi <beepboop@arjungandhi.com>
+Date: Fri Jul 26 10:52:04 2013 +0200
+
+    Got the robot to drive off a table consistently
+
+commit 2b504bee4083a20e0ef1e037eea0bd913a4d56b6
+Author: Arjun Gandhi <beepboop@arjungandhi.com>
+Date: Fri Jul 26 10:05:48 2013 +0200
+
+    Got the robot to unplug its own wires
+\end{lstlisting}
+Looking at the Log, you'll see that your new commit was properly saved. No big surprises, so far. But now let's switch back to "master" and have a look at the Log once more:
+\begin{lstlisting}
+$ git checkout master
+$ git log
+commit 2dfe283e6c81ca48d6edc1574b1f2d4d84ae7f1
+Author: Arjun Gandhi <beepboop@arjungandhi.com>
+Date: Fri Jul 26 10:52:04 2013 +0200
+
+    Got the robot to drive off a table consistently
+
+commit 2b504bee4083a20e0ef1e037eea0bd913a4d56b6
+Author: Arjun Gandhi <beepboop@arjungandhi.com>
+Date: Fri Jul 26 10:05:48 2013 +0200
+
+    Got the robot to unplug its own wires
+\end{lstlisting}
 
 \begin{thebibliography}{9}
 \bibitem{git-tower}
