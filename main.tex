@@ -820,10 +820,50 @@ When starting a merge, you don't have to (and cannot) pick individual commits th
 Also, you never have to think long and hard about where these changes end up: The target of such an integration is always your current HEAD branch and, thereby, your working copy.
 \begin{figure}[h]
     \centering
-    \includegraphics{}
+    \includegraphics[width=4.5in]{images/basic-merging.png}
 \end{figure}
 \end{concept}
+In Git, performing a merge is easy as pie. It requires just two steps:
+\begin{itemize}
+    \item Check out the branch that should receive the changes.
+    \item Call the "git merge" command with the name of the branch that contains the desired changes.
+Let's integrate the changes from our "contact-form" branch into "master":
+\end{itemize}
+\begin{lstlisting}
+$ git checkout master
+$ git merge pid-test
+\end{lstlisting}
 
+When you now perform a "git log" command, you'll see that our "Robot can now jump" commit was successfully integrated into master!
+
+\begin{lstlisting}
+$ git log
+commit 56eddd14cf034f4bcb8dc9cbf847b33309fa5180
+Author: Arjun Gandhi <beepboop@arjungandhi.com>
+Date: Fri Jul 26 10:56:16 2013 +0200
+
+    Robot can now jump
+
+commit 2dfe283e6c81ca48d6edc1574b1f2d4d84ae7f1
+Author: Arjun Gandhi <beepboop@arjungandhi.com>
+Date: Fri Jul 26 10:52:04 2013 +0200
+
+    Got the robot to drive off a table consistently
+
+commit 2b504bee4083a20e0ef1e037eea0bd913a4d56b6
+Author: Arjun Gandhi <beepboop@arjungandhi.com>
+Date: Fri Jul 26 10:05:48 2013 +0200
+
+    Got the robot to unplug its own wires
+\end{lstlisting}
+
+However, the result of a merge action can't always be displayed that clearly: not always can Git simply add the missing commits on top of the HEAD branch. Often, it will have to combine changes in a new, separate commit called a "merge commit". Think of it like a knot that connects two branches.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=4.5in]{images/merge-commit.jog}
+\end{figure}
+
+You can merge one branch into another as often as you like. Git will again figure out which changes haven't been merged and only consider these.
 
 \begin{thebibliography}{9}
 \bibitem{git-tower}
