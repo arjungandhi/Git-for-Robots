@@ -6,6 +6,7 @@
 \usepackage{hyperref}
 \usepackage{listings}
 \usepackage{amsthm}
+\usepackage{float}
 
 \makeindex
 \hypersetup{
@@ -123,7 +124,7 @@ On Windows, you can download the "Git for Windows" package from here: \href{http
 Allow popup: yes
 \newline\newline
 When running the installer EXE, you should choose the default options in each screen. After finishing the installation, you can begin working with Git by starting the "Git Bash" application. You'll find it in the Windows START menu, inside the "Git" folder:
-\begin{figure}[hp]
+\begin{figure}[h]
     \centering
     \includegraphics[width=4.5in]{images/git-bash-windows}
 \end{figure}
@@ -139,7 +140,7 @@ $ brew install git
 \end{lstlisting}
 Then open up the terminal you can do this by starting "Terminal.app" on your Mac. You'll find this in the "Utilities" subfolder of your "Applications" folder in Finder:
 
-\begin{figure}[hp]
+\begin{figure}[h]
     \centering
     \includegraphics[width=4.5in]{images/terminal-app-mac.jpg}
 \end{figure}
@@ -312,13 +313,13 @@ $ git commit -m "Initial commit"
 \subsubsection{Creating a repository on GitHub}
 We are going to go onto GitHub and make our first repository.
 Log on to Github and hit the new repository button:
-\begin{figure}[hp]
+\begin{figure}[h]
     \centering
     \includegraphics[width=4.5in]{images/new-repo.jpg}
 \end{figure}
 \newline\newline
 Go ahead and give your repository any name you want: 
-\begin{figure}[t]
+\begin{figure}[h]
     \centering
     \includegraphics[width=4.5in]{images/new-repo2.jpg}
 \end{figure}
@@ -329,15 +330,63 @@ There are a couple options on Github
     \item Initialize repository with a Read Me: This will create an example file called README.md in all GitHub repository's this file will be rendered when ever some one visits the repository. This is a good place to put any useful information about the project your working on that some one new might need to know.
 \end{enumerate}
 \newpage
+Now we need to download the new GitHub project onto our computer. This is known as \index{clone}cloning a repository.
+\newline
+\newline
+We first need the url for the repository this can be found by clicking the clone or download button on the page.
+\begin{figure}[H]
+    \includegraphics[width=4in]{images/clone.jpg}
+\end{figure}
+Copy the link that pops up and make sure you have selected the HTTPS option.
+\newline\newline
+Go back to the terminal and cd into the directory where you want to download the repository.
+\begin{lstlisting}[language=bash]
+$ cd your/development/folder/
+\end{lstlisting}
+Now we will clone our new repository with the clone command.
+\begin{lstlisting}[language=bash]
+$ git clone https://github.com/arjungandhi/Example.git
+\end{lstlisting}
+You will have to enter your username and password here in this case you will be using your github username and password.
 
-We now need to get the url for the repository this can be found by clicking the clone or download button on the page.
+Git will now download a complete copy of this repository to your local disk.
 
-\begin{figure}[hp]
+\section{Working on your Project}
+No matter if you created a brand new repository or if you cloned an existing one - you now have a local Git repository on your computer. This means you're ready to start working on your project: use whatever application you want to change, create, delete, move, copy, or rename your files.
+
+ \newtheorem*{concept}{Concept}
+ \begin{concept}
+The Status of a File: 
+\newline\newline
+In general, files can have one of two statuses in Git:
+\begin{itemize}
+    \item untracked: a file that is not under version control, yet, is called "untracked". This means that the version control system doesn't watch for (or "track") changes to this file. In most cases, these are either files that are newly created or files that are ignored and which you don't want to include in version control at all.
+    \item tracked: all files that are already under version control are called "tracked". Git watches these files for changes and allows you to commit or discard them.
+\end{itemize}
+ \end{concept}
+\subsection{The Staging Area}
+At some point after working on your files for a while, you'll want to save a new version of your project. Or in other words: you'll want to commit some of the changes you made to your tracked files.
+ \newtheorem{golden-rule}{Golden Rule}
+ \begin{golden-rule}Commit Only Related Changes:
+ \newline\newline
+When crafting a commit, it's very important to only include changes that belong together. You should never mix up changes from multiple, different topics in a single commit. For example, imagine wrapping both some work for your path planning and your drive code in fix \#169 the same commit:
+\begin{itemize}
+    \item Understanding what all those changes really mean and do gets hard for your teammates (and, after some time, also for yourself). Someone who's trying to understand the progress of that new login functionality will have to untangle it from the bugfix code first.
+    \item Undoing one of the topics gets impossible. Maybe your login functionality introduced a new bug. You can't undo just this one without undoing your work for fix \#169, also!
+\end{itemize}
+Instead, a commit should only wrap related changes: fixing two different bugs should produce (at the very least) two separate commits; or, when developing a larger feature, every small aspect of it might be worth its own commit.
+Small commits that only contain one topic make it easier for other members of your team to understand the changes - and to possibly undo them if something went wrong.
+ \end{golden-rule}
+
+However, when you're working full-steam on your project, you can't always guarantee that you only make changes for one and only one topic. Often, you work on multiple aspects in parallel.
+ \newline\newline
+This is where the "Staging Area", one of Git's greatest features, comes in very handy: it allows you to determine which of your local changes shall be committed. Because in Git, simply making some changes doesn't mean they're automatically committed. Instead, every commit is "hand-crafted": each change that you want to include in the next commit has to be marked explicitly ("added to the Staging Area" or, simply put, "staged").
+\begin{figure}[h]
     \centering
-    \includegraphics[width=4.5in]{images/clone.jpg}
+    \includegraphics[width=4.5in]{images/sta.jpg}
 \end{figure}
 
-Now we need to download the new GitHub project onto our computer. This is known as \index{clone}cloning a repository.
+
 
 
 
