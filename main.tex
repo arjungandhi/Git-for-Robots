@@ -654,17 +654,17 @@ So, which branch is HEAD at the moment? The "git status" command tells us in its
 The "master" branch was created by Git automatically for us when we started the project. Although you could rename or delete it, you'll have a hard time finding a project without it because most people just keep it. But please keep in mind that "master" is by no means a special or magical branch. It's like any other branch!
 \newline\newline
 Now, let's start working on a new feature. Based on the project's current state, we create a new branch and name it "pid-test":
-\begin{lstlisting}
+\begin{lstlisting}[language=bash]
 $ git branch pid-test
 \end{lstlisting}
 Using the "git branch" command lists all of our branches (and the "-v" flag provides us with a little more data than usual):
-\begin{lstlisting}
+\begin{lstlisting}[language=bash]
 $ git branch -v
   pid-test     3de33cc Got the robot to drive off a table consistently
 * master       3de33cc [ahead 1] Got the robot to drive off a table consistently
 \end{lstlisting}
 You can see that our new branch "pid-testm" was created and is based on the same version as "master". Additionally, the little asterisk character (*) next to "master" indicates that this is our current HEAD branch. To emphasize this: the "git branch" command only created that new branch - but it didn't make it active. Before checking out that new branch, it's a good idea to have another look at "git status" to see where we currently are:
-\begin{lstlisting}
+\begin{lstlisting}[language=bash]
 $ git status
 # On branch master
 # Changes not staged for commit:
@@ -677,7 +677,7 @@ $ git status
 no changes added to commit (use "git add" and/or "git commit -a")
 \end{lstlisting}
 
-Oh, right: we still have some changes in "imprint.html" in our working copy! Actually, we just wanted to start working on our new "contact-form" branch; but these changes don't belong to this feature. So what do we do with them? One way to get this work-in-progress out of the way would be to simply commit it. But committing half-done work is a bad habit.
+Oh, right: we still have some changes in "imprint.html" in our working copy! Actually, we just wanted to start working on our new "pid-test" branch; but these changes don't belong to this feature. So what do we do with them? One way to get this work-in-progress out of the way would be to simply commit it. But committing half-done work is a bad habit.
 
 \begin{golden-rule}Never Commit Half-Done Work
 \newline\newline
@@ -701,13 +701,13 @@ You can create as many Stashes as you want - you're not limited to storing only 
 
 Let's stash away these local changes so we have a clean working copy before starting to work on our new feature:
 
-\begin{lstlisting}
+\begin{lstlisting}[language=bash]
 $ git stash
 Saved working directory and index state WIP on master: 
    2dfe283 Got the robot to drive off a table consistently
 HEAD is now at 2dfe283 Got the robot to drive off a table consistently
 \end{lstlisting}
-\begin{lstlisting}
+\begin{lstlisting}[language=bash]
 $ git status
 # On branch master
 nothing to commit (working directory clean)
@@ -715,7 +715,7 @@ nothing to commit (working directory clean)
 The local changes in "dobackflip.py" are now safely stored on a clipboard, ready to be restored any time we want to continue working on them.
 \newline\newline
 You can easily get an overview of your current Stashes:
-\begin{lstlisting}
+\begin{lstlisting}[language=bash]
 $ git stash list
 stash@{0}: WIP on master: 2d6e283 Implement the new login box
 \end{lstlisting}
@@ -744,7 +744,7 @@ Stashing helps you get a clean working copy. While this can be helpful in many s
 
 \section{Checking Out a Local Branch}
 Now that we have a clean working copy, the first thing we have to do is switch to (or "check out") our newly created branch:
-\begin{lstlisting}
+\begin{lstlisting}[language=bash]
 $ git checkout pid-test
 \end{lstlisting}
 
@@ -767,7 +767,7 @@ To make another branch (say, "pid-test") active, the "git checkout" command is u
 Running "git status" once more, you'll see that we're now "On branch pid-test". From now on, all of our changes and commits will only impact this very context - until we switch it again by using the "checkout" command to make a different branch active.
 \newline\newline
 Let's prove this by creating a new file called "jumpboy.py" and committing it:
-\begin{lstlisting}
+\begin{lstlisting}[language=bash]
 $ git add jumpboy.py
 $ git commit -m "Robot can now jump"
 $ git log
@@ -790,7 +790,7 @@ Date: Fri Jul 26 10:05:48 2013 +0200
     Got the robot to unplug its own wires
 \end{lstlisting}
 Looking at the Log, you'll see that your new commit was properly saved. No big surprises, so far. But now let's switch back to "master" and have a look at the Log once more:
-\begin{lstlisting}
+\begin{lstlisting}[language=bash]
 $ git checkout master
 $ git log
 commit 2dfe283e6c81ca48d6edc1574b1f2d4d84ae7f1
@@ -827,16 +827,16 @@ In Git, performing a merge is easy as pie. It requires just two steps:
 \begin{itemize}
     \item Check out the branch that should receive the changes.
     \item Call the "git merge" command with the name of the branch that contains the desired changes.
-Let's integrate the changes from our "contact-form" branch into "master":
+Let's integrate the changes from our "pid-test" branch into "master":
 \end{itemize}
-\begin{lstlisting}
+\begin{lstlisting}[language=bash]
 $ git checkout master
 $ git merge pid-test
 \end{lstlisting}
 
 When you now perform a "git log" command, you'll see that our "Robot can now jump" commit was successfully integrated into master!
 
-\begin{lstlisting}
+\begin{lstlisting}[language=bash]
 $ git log
 commit 56eddd14cf034f4bcb8dc9cbf847b33309fa5180
 Author: Arjun Gandhi <beepboop@arjungandhi.com>
@@ -860,10 +860,103 @@ Date: Fri Jul 26 10:05:48 2013 +0200
 However, the result of a merge action can't always be displayed that clearly: not always can Git simply add the missing commits on top of the HEAD branch. Often, it will have to combine changes in a new, separate commit called a "merge commit". Think of it like a knot that connects two branches.
 \begin{figure}[h]
     \centering
-    \includegraphics[width=4.5in]{images/merge-commit.jog}
+    \includegraphics[width=4.5in]{images/merge-commit.jpg}
+\end{figure}
+\newpage
+You can merge one branch into another as often as you like. Git will again figure out which changes haven't been merged and only consider these.
+
+\subsection{Dealing with Merge Conflicts}
+For a lot of people, merge conflicts are as scary as accidentally formatting their hard drive. In the course of this section, I want to relieve you from this fear.
+\subsubsection{You Cannot Break Things}
+The first thing that you should keep in mind is that you can always undo a merge and go back to the state before the conflict occurred. You're always able to undo and start fresh.
+\newline\newline
+Also, a conflict will only ever handicap yourself. It will not bring your complete team to a halt or cripple your central repository. This is because, in Git, conflicts can only occur on a developer's local machine - and not on the server.
+\subsubsection{How a Merge Conflict Occurs}
+In Git, "merging" is the act of integrating another branch into your current working branch. You're taking changes from another context (that's what a branch effectively is: a context) and combine them with your current working files.
+\newline\newline
+A great thing about having Git as your version control system is that it makes merging extremely easy: in most cases, Git will figure out how to integrate new changes.
+\newline\newline
+However, there's a handful of situations where you might have to step in and tell Git what to do. Most notably, this is when changing the same file. Even in this case, Git will most likely be able to figure it out on its own. But if two people changed the same lines in that same file, or if one person decided to delete it while the other person decided to modify it, Git simply cannot know what is correct. Git will then mark the file as having a conflict - which you'll have to solve before you can continue your work.
+\subsubsection{How to Solve a Merge Conflict}
+When faced with a merge conflict, the first step is to understand what happened. E.g.: Did one of your colleagues edit the same file on the same lines as you? Did he delete a file that you modified? Did you both add a file with the same name?
+Git will tell you that you have "unmerged paths" (which is just another way of telling you that you have one or more conflicts) via "git status":
+\begin{lstlisting}[language=bash]
+$ git status
+# On branch pid-test
+# You have unmerged paths.
+#   (fix conflicts and run "git commit")
+#
+# Unmerged paths:
+#   (use "git add <file>..." to mark resolution)
+#
+#       both modified:   dobackflip.py
+#
+no changes added to commit (use "git add" and/or "git commit -a")
+\end{lstlisting}
+
+Let's take an in-depth look on how to solve the most common case, when two changes affected the same file on the same lines.
+Now is the time to have a look at the contents of the conflicted file. Git was nice enough to mark the problematic area in the file by enclosing it in "<<<<<<< HEAD" and ">>>>>>> [other/branch/name]".
+\begin{lstlisting}[language=bash]
+<<<<<<< HEAD
+This code existed in our HEAD branch
+=======
+This code existed in the branch we tried to merge into HEAD
+>>>>>>> [other/branch/name]
+\end{lstlisting}
+
+Handling this is much easier than people suspect all you have to do is open your favorite text editor and clean up the code. Your goal is to make the code exactly like it normally should. Delete/Modify the lines as needed, save the file and commit. It can be necessary to consult the teammate who wrote the conflicting changes to decide which code is finally correct. Maybe it's yours, maybe it's his - or maybe a mixture between the two.
+\newline\newline 
+There also exists some 3rd party editors that make this process a little easier by having a pretty GUI that you can click on. 
+
+\subsubsection{How to Undo a Merge}
+
+You should always keep in mind that you can return to the state before you started the merge at any time. This should give you the confidence that you can't break anything. On the command line, a simple "git merge --abort" will do this for you.
+\newline\newline
+In case you've made a mistake while resolving a conflict and realize this only after completing the merge, you can still easily undo it: just roll back to the commit before the merge happened with "git reset --hard " and start over again.
+\section{Working with remote branches}
+
+About 90\% of version control related work happens in the local repository: staging, committing, viewing the status or the log/history, etc. 
+\newline\newline
+Only when it comes to sharing data with your teammates, a remote repo comes into play. Think of it like a "file server" that you use to exchange data with your colleagues.
+\newline\newline
+Let's look at the few things that distinguish local and remote repositories from each other:
+
+\begin{itemize}
+    \item Location: Local repositories reside on the computers of team members. In contrast, remote repositories are hosted on a server that is accessible for all team members - most likely on the internet or on a local network.
+    \item Features: Technically, a remote repository doesn't differ from a local one: it contains branches, commits, and tags just like a local repository. However, a local repository has a working copy associated with it: a directory where some version of your project's files is checked out for you to work with. A remote repository doesn't have such a working directory: it only consists of the bare ".git" repository folder.
+    \item  Usage: It's important to stress that the actual work on your project happens only in your local repository: all modifications have to be made \& committed locally. Then, those changes can be uploaded to a remote repository in order to share them with your team. Remote repositories are only thought as a means for sharing and exchanging code between developers - not for actually working on files.
+\end{itemize}
+
+\subsection{Local / Remote Workflow}
+In Git, there are only a mere handful of commands that interact with a remote repository.
+\newline\newline
+The overwhelming majority of work happens in the local repository. Until this point (except when we called "git clone"), we've worked exclusively with our local Git repository and never left our local computer. We were not dependent on any internet or network connection but instead worked completely offline.
+\newline\newline
+We'll look at each of these commands in the course of the following sections.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=4.5in]{images/basic-remote-workflow.png}
 \end{figure}
 
-You can merge one branch into another as often as you like. Git will again figure out which changes haven't been merged and only consider these.
+\subsection{Integrating Remote Changes}
+Sooner or later, one of your teammates will probably also share his changes on your common remote repository. Before integrating these changes into your local working copy, you might first want to inspect them:
+\begin{lstlisting}[language=bash]
+$ git fetch origin
+$ git log origin/master
+\end{lstlisting}
+The "git log" command now shows you the commits that happened recently on the "master" branch of the remote called "origin".
+\newline
+If you decide you want to integrate these changes into your working copy, the "git pull" command is what you need:
+\begin{lstlisting}[lauguage=bash]
+$ git pull
+\end{lstlisting}
+
+This command downloads new commits from the remote and directly integrates them into your working copy. It's actually a "fetch" command (which only downloads data) and a "merge" command (which integrates this data into your working copy) combined.
+
+As with the "git push" command: in case no tracking connection was established for your local HEAD branch, you will also have to tell Git from which remote repository and which remote branch you want to pull ("git pull origin master", e.g.). In case a tracking connection already exists, a vanilla "git pull" is sufficient.
+
+The target of the integration, however, is independent of a tracking connection and is always the same: your local HEAD branch and, thereby, your working copy.
+
 
 \begin{thebibliography}{9}
 \bibitem{git-tower}
