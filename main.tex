@@ -610,10 +610,24 @@ Not working in clearly separated contexts can (and sooner or later will) cause s
     \item What do you do if the entire code rewrite turns proves to be impossible to implement? It's already mingled with all of those other changes, being almost impossible to separate out!
     \item How can you avoid losing track? Most likely, you shouldn't be bothered with all the topics from all of your teamates.
 \end{itemize}
-
 Things will start to get very confusing when you try to handle multiple topics in a single context:
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=4.5in]{images/one-context.jpg}
+\end{figure}
 
+A tempting workaround might be to simply copy your complete project folder for each new context. But this only leaves you with other problems:
+\begin{itemize}
+    \item You circumvent your VCS, since those new folders won't be under version control.
+    \item Not being version controlled, you can't easily share \& collaborate with others.
+    \item Integrating changes from one context into another (maybe your main context) is difficult and error-prone.
+\end{itemize}
 
+To make a long story short: if your goal is to maintain a level of santity, you'll have to find a way to deal with multiple contexts in a clean manner.
+
+\subsection{Branches to the Rescue}
+
+You might have already guessed it: branches are what we need to solve these problems. Because a branch represents exactly such a context in a project and helps you keep it separate from all other contexts.
 
 
 
