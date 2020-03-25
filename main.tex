@@ -754,7 +754,7 @@ Checkout, HEAD, and Your Working Copy
 A branch automatically points to the latest commit in that context. And since a commit references a certain version of your project, Git always knows exactly which files belong to that branch.
 \begin{figure}[h]
     \centering
-    \includegraphics[width=4.5in]{}
+    \includegraphics[width=4.5in]{images/branch-pointers.png}
 \end{figure}
 At each point in time, only one branch can be HEAD / checked out / active. The files in your working copy are those that are associated with this exact branch. All other branches (and their associated files) are safely stored in Git's database.
 \newline\newline
@@ -805,6 +805,25 @@ Date: Fri Jul 26 10:05:48 2013 +0200
 
     Got the robot to unplug its own wires
 \end{lstlisting}
+
+You'll find that the "Robot can now jump" commit isn't there - because we made it in the context of our HEAD branch (which was the "pid-test" branch, not the "master" branch). This is exactly what we wanted: our changes are kept in their own context, separated from other contexts.
+
+\section{Merging Changes}
+Keeping your commits in the separate context of a branch is a huge help. But there will come a time when you want to integrate changes from one branch into another. For example when you finished developing a feature and want to integrate it into your "production" branch. Or maybe the other way around: you're not yet finished working on your feature, but so many things have happened in the rest of the project in the meantime that you want to integrate these back into your feature branch.
+\newline\newline
+Whatever the scenario may be: such an integration is called "merging" and is done with the "git merge" command.
+\begin{concept}
+Integrating Branches - Not Individual Commits
+\newline\newline
+When starting a merge, you don't have to (and cannot) pick individual commits that shall be integrated. Instead, you tell Git which branch you want to integrate - and Git will figure out which commits you don't have in your current working branch. Only these commits will then be integrated as a result.
+\newline\newline
+Also, you never have to think long and hard about where these changes end up: The target of such an integration is always your current HEAD branch and, thereby, your working copy.
+\begin{figure}[h]
+    \centering
+    \includegraphics{}
+\end{figure}
+\end{concept}
+
 
 \begin{thebibliography}{9}
 \bibitem{git-tower}
